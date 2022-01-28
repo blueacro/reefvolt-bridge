@@ -1,0 +1,6 @@
+FROM docker.io/balenalib/raspberry-pi:buster
+
+RUN apt-get update -y && \
+    apt-get install -y build-essential curl
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- --default-host=arm-unknown-linux-gnueabihf -y
