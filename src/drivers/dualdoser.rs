@@ -8,6 +8,9 @@ use std::time::Duration;
 
 use log::info;
 
+const EP_OUT: u8 = 2;
+const EP_IN: u8 = 0x81;
+
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     #[error("usb error")]
@@ -29,6 +32,7 @@ where
 {
     pub fn new(mut device: DeviceHandle<C>) -> Result<Self, Error> {
         device.reset().map_err(Error::UsbError)?;
+        device.claim_interface(0).map_err(Error::UsbError)?;
         let descriptor = device
             .device()
             .device_descriptor()
@@ -49,15 +53,15 @@ where
             .map_err(Error::ProtocolError)?;
         let _b = self
             .handle
-            .write_bulk(0, &command, Duration::from_millis(100))
-            .map_err(Error::UsbError)?;
+            .write_bulk(EP_OUT, &command, Duration::from_millis(100))
+            .unwrap();
         let _result = self
             .handle
-            .read_bulk(0x81, &mut buf, Duration::from_millis(100))
+            .read_bulk(EP_IN, &mut buf, Duration::from_millis(100))
             .map_err(Error::UsbError)?;
         match Response::from_primitive(buf[0]) {
             Some(Response::Status) => {
-                ResponseStatus::unpack_from_slice(&buf[1..]).map_err(Error::ProtocolError)
+                ResponseStatus::unpack_from_slice(&buf[1..6]).map_err(Error::ProtocolError)
             }
             _ => Err(Error::UnknownResponseError),
         }
