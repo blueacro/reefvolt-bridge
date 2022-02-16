@@ -1,0 +1,2 @@
+# ReefVolt DualDoser
+SUBSYSTEM=="usb", ATTRS{idVendor}=="726c", ATTRS{idProduct}=="3101", MODE="0666"
