@@ -26,6 +26,15 @@ pub struct DualDoser<C: rusb::UsbContext> {
     serial: String,
 }
 
+impl<C> Drop for DualDoser<C>
+where
+    C: rusb::UsbContext,
+{
+    fn drop(&mut self) {
+        info!("stopping dualdoser {}", self.serial);
+    }
+}
+
 impl<C> DualDoser<C>
 where
     C: rusb::UsbContext,

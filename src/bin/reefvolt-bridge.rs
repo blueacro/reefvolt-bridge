@@ -3,7 +3,7 @@ use env_logger::Env;
 use log::info;
 use rusb::{Device, GlobalContext};
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::time::Duration;
 
 use reefvolt_bridge::{drivers::dualdoser::DualDoser, Driver};
@@ -55,8 +55,9 @@ fn main() {
     loop {
         // Try to map new devices
         let devices = scan_devices().unwrap();
+
         // Filter out old devices
-        let addresses: Vec<Address> = devices.iter().map(Address::from).collect();
+        let addresses: HashSet<Address> = devices.iter().map(Address::from).collect();
         drivers.retain(|k, _v| addresses.contains(k));
 
         for device_handle in devices.iter() {
