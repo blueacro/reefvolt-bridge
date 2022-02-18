@@ -6,3 +6,8 @@ RUN apt-get update -y && \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- --default-host=arm-unknown-linux-gnueabihf -y
 ENV PATH $PATH:/root/.cargo/bin
 RUN cargo install cargo-deb
+RUN mkdir -p /code
+COPY . /code
+WORKDIR /code
+RUN cargo test
+RUN cargo build
