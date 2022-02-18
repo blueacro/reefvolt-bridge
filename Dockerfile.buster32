@@ -10,4 +10,4 @@ RUN mkdir -p /code
 COPY . /code
 WORKDIR /code
 RUN cargo test
-RUN cargo build
+RUN cargo build --release
