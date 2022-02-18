@@ -23,7 +23,6 @@ fn scan_devices() -> anyhow::Result<Vec<Device<GlobalContext>>> {
         })
         .collect();
 
-    info!("discovered devices: {:?}", devices);
     Ok(devices)
 }
 
